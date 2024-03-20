@@ -140,4 +140,11 @@ class ApiController extends Controller
 
         return CommonFunctions::return_data_table($players_optimized, $cantidad_orig);
     }
+
+    public function get_top_10()
+    {
+        $top10 = CommonFunctions::top_10_players();
+
+        return response()->json($top10);
+    }
 }
