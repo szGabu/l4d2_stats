@@ -45,6 +45,7 @@ class ApiController extends Controller
         $start = isset($input["start"]) ? intval($input["start"]) : 0;
         $length = isset($input["length"]) ? intval($input["length"]) : 10;
         $draw = isset($input["draw"]) ? intval($input["draw"]) : 10;
+        $url = isset($input["url"]) ? $input["url"] : null;
 
         $players = null;
         
@@ -83,7 +84,12 @@ class ApiController extends Controller
             $buffer = [];
 
             array_push($buffer, $player->position);
-            array_push($buffer, sprintf("<a href=\"%s\">%s</a>", route('stats.individual', ['steamid' => $player->steamid ]), htmlspecialchars($player->name)));
+            if(is_null($url))
+                array_push($buffer, sprintf("<a href=\"%s\">%s</a>", route('stats.individual', ['steamid' => $player->steamid ]), htmlspecialchars($player->name)));
+            elseif(strcmp($url, "no") == 0) 
+                array_push($buffer, sprintf("%s", htmlspecialchars($player->name)));
+            else
+                array_push($buffer, sprintf("<a href=\"https://%s?steamid=%s\">%s</a>", $url, $player->steamid, htmlspecialchars($player->name)));
             array_push($buffer, $player->points);
             array_push($buffer, CarbonInterval::minutes($player->playtime)->cascade()->forHumans());
             array_push($buffer, Carbon::createFromTimestamp($player->lastontime)->diffForHumans());
