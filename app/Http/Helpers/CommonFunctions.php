@@ -33,6 +33,16 @@ class CommonFunctions
     {
         $player = Player::withoutGlobalScope('config_filters')->where('steamid', $steamid)->first();
 
+        $player->survivors_killed = self::get_survivors_killed($steamid);
+        $player->headshot_ratio = self::get_headshot_ratio($steamid);
+        $player->boomer_average = self::get_infected_average('boomer', $steamid);
+        $player->hunter_average = self::get_infected_average('hunter', $steamid);
+        $player->smoker_average = self::get_infected_average('smoker', $steamid);
+        $player->spitter_average = self::get_infected_average('spitter', $steamid);
+        $player->jockey_average = self::get_infected_average('jockey', $steamid);
+        $player->charger_average = self::get_infected_average('charger', $steamid);
+        $player->tank_average = self::get_infected_average('tank', $steamid);
+
         return $player;
     }
 
@@ -111,7 +121,107 @@ class CommonFunctions
 
         $stats = Player::select($cols)->first();
 
+        $stats->playercount = self::get_player_count();
+        $stats->survivors_killed = self::get_survivors_killed();
+        $stats->headshot_ratio = self::get_headshot_ratio();
+        $stats->boomer_average = self::get_infected_average('boomer');
+        $stats->hunter_average = self::get_infected_average('hunter');
+        $stats->smoker_average = self::get_infected_average('smoker');
+        $stats->spitter_average = self::get_infected_average('spitter');
+        $stats->jockey_average = self::get_infected_average('jockey');
+        $stats->charger_average = self::get_infected_average('charger');
+        $stats->tank_average = self::get_infected_average('tank');
+
         return $stats;
+    }
+
+    public static function get_player_count()
+    {
+        $playercount = Player::count();
+        
+        return $playercount;
+    }
+
+    public static function get_survivors_killed(string $steamid = null)
+    {
+        $stats = Player::selectRaw('SUM(versus_kills_survivors)+SUM(scavenge_kills_survivors)+SUM(realism_kills_survivors) as survivors_killed');
+        if(!is_null($steamid))
+            $stats = $stats->where('steamid', $steamid);
+
+        $stats = $stats->first();
+
+        return $stats?->survivors_killed;
+    }
+
+    public static function get_headshot_ratio(string $steamid = null)
+    {
+        //taken directly from the plugin
+        // Headshots == 0 ? 0.00 : float(Headshots) / float(InfectedKilled)*100;
+        $stats = Player::selectRaw('SUM(headshots) / SUM(kill_infected+kill_hunter+kill_smoker+kill_boomer+kill_spitter+kill_jockey+kill_charger)*100 as headshot_ratio');
+        if(!is_null($steamid))
+            $stats = $stats->where('steamid', $steamid);
+
+        $stats = $stats->first();
+
+        return $stats?->headshot_ratio;
+    }
+
+    public static function get_infected_average(string $infected, string $steamid = null)
+    {
+        $column1 = null;
+        $column2 = sprintf('infected_%s_damage', $infected);
+        switch($infected)
+        {
+            case 'boomer':
+            {
+                $column1 = 'infected_spawn_2';
+                $column2 = 'infected_boomer_blinded';
+                break;
+            }
+            case 'hunter':
+            {
+                $column1 = 'infected_spawn_3';
+                $column2 = 'infected_hunter_pounce_dmg';
+                break;
+            }
+            case 'smoker':
+            {
+                $column1 = 'infected_spawn_1';
+                break;
+            }
+            case 'spitter':
+            {
+                $column1 = 'infected_spawn_4';
+                break;
+            }
+            case 'jockey':
+            {
+                $column1 = 'infected_spawn_5';
+                break;
+            }
+            case 'charger':
+            {
+                $column1 = 'infected_spawn_6';
+                break;
+            }
+            case 'tank':
+            {
+                $column1 = 'infected_spawn_8';
+                break;
+            }
+            default:
+            {
+                return 0.0;
+            }
+        }
+
+        $stats = Player::selectRaw(sprintf('SUM(%s)/SUM(%s) as average', $column1, $column2));
+        if(!is_null($steamid))
+            $stats = $stats->where('steamid', $steamid);
+
+        $stats = $stats->first();
+
+        return $stats?->average;
     }
 
     public static function return_data_table($object, $total, $draw = 10, $filtered = null)
