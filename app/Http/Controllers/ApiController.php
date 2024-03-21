@@ -32,7 +32,7 @@ class ApiController extends Controller
         return response()->json($awards);
     }
 
-    public static function query_player_count()
+    public static function query_playercount()
     {
         return response()->json(Player::count());
     }
