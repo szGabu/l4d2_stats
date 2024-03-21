@@ -11,11 +11,18 @@ use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
 {
-    public function query_player(string $steamid)
+    public function query_player_stats(string $steamid)
     {
-        $player = CommonFunctions::query_player($steamid);
+        $player = CommonFunctions::get_player_stats($steamid);
 
         return response()->json($player);
+    }
+
+    public function query_server_stats()
+    {
+        $server = CommonFunctions::get_server_stats();
+
+        return response()->json($server);
     }
 
     public function get_awards()

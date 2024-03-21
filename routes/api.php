@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/player/{steamid}', 'App\Http\Controllers\ApiController@query_player')->name('api.player');
+Route::get('/player/{steamid}', 'App\Http\Controllers\ApiController@query_player_stats')->name('api.player');
+Route::get('/server', 'App\Http\Controllers\ApiController@query_server_stats')->name('api.server');
 Route::get('/awards', 'App\Http\Controllers\ApiController@get_awards')->name('api.awards');
 Route::get('/stats_query', 'App\Http\Controllers\ApiController@query_stats')->name('api.ranking');
 Route::get('/online_query', 'App\Http\Controllers\ApiController@query_online')->name('api.online');

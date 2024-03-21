@@ -28,7 +28,7 @@ class ViewController extends Controller
     {
         $input = $request->all();
         $steamid = isset($input["steamid"]) ? $input["steamid"] : null;
-        $player = CommonFunctions::query_player($steamid);
+        $player = CommonFunctions::get_player_stats($steamid);
         
         if($player)
         {

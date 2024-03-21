@@ -29,7 +29,7 @@ class CommonFunctions
         return asset(sprintf('img/render%d.jpg', rand(1, 29)));
     }
 
-    public static function query_player(string $steamid)
+    public static function get_player_stats(string $steamid)
     {
         $player = Player::withoutGlobalScope('config_filters')->where('steamid', $steamid)->first();
 
