@@ -11,25 +11,30 @@ use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
 {
-    public function query_player_stats(string $steamid)
+    public static function query_player_stats(string $steamid)
     {
         $player = CommonFunctions::get_player_stats($steamid);
 
         return response()->json($player);
     }
 
-    public function query_server_stats()
+    public static function query_server_stats()
     {
         $server = CommonFunctions::get_server_stats();
 
         return response()->json($server);
     }
 
-    public function get_awards()
+    public static function query_awards()
     {
         $awards = CommonFunctions::get_awards();
 
         return response()->json($awards);
+    }
+
+    public static function query_player_count()
+    {
+        return response()->json(Player::count());
     }
 
     public static function query_stats(Request $request)
@@ -89,7 +94,7 @@ class ApiController extends Controller
         return CommonFunctions::return_data_table($players_optimized, $cantidad_orig, $draw, $cantidad_filtrada);
     }
 
-    public function query_online()
+    public static function query_online()
     {
         $players = null;
         $players = Player::select(
@@ -148,7 +153,7 @@ class ApiController extends Controller
         return CommonFunctions::return_data_table($players_optimized, $cantidad_orig);
     }
 
-    public function get_top_10()
+    public static function query_top_10()
     {
         $top10 = CommonFunctions::top_10_players();
 
