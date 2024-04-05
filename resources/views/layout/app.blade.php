@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>{{env('COMMUNITY_NAME')}} - Left 4 Dead Stats</title>
+        <title>{{env('STATS_COMMUNITY_NAME')}} - Left 4 Dead Stats</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <link href="{{asset('vendor/BootStrap/css/bootstrap.min.css')}}" rel="stylesheet" />
@@ -69,7 +69,7 @@
             <div class="backdrop_filter">
                 <div class="container">
                     <div class="text-center my-5">
-                        <h1 class="fw-bolder text-white title_name">{{env('COMMUNITY_NAME')}}</h1>
+                        <h1 class="fw-bolder text-white title_name">{{env('STATS_COMMUNITY_NAME')}}</h1>
                     </div>
                     <marquee class="motd_message flex-fill" direction="left">
                         {{\CommonFunctions::get_message_of_the_day()}}
@@ -136,9 +136,9 @@
                         </div>
                     </div>
                     <!-- Side widget-->
-                    @if(env('DISCORD_GUILD_ID', 0) > 0)
+                    @if(env('STATS_DISCORD_GUILD_ID', 0) > 0)
                     @php
-                        $widget_url = sprintf("https://discord.com/widget?id=%d&theme=light", env('DISCORD_GUILD_ID', 0));
+                        $widget_url = sprintf("https://discord.com/widget?id=%d&theme=light", env('STATS_DISCORD_GUILD_ID', 0));
                     @endphp
                     <div class="card mb-4">
                         <iframe src="{{$widget_url}}" width="100%" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>

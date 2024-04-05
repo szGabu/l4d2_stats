@@ -13,8 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'App\Http\Controllers\ViewController@playersonline')->name('stats.online');
-Route::get('/playerlist', 'App\Http\Controllers\ViewController@ranking')->name('stats.ranking');
-Route::get('/player', 'App\Http\Controllers\ViewController@player_stats')->name('stats.individual');
-Route::get('/server', 'App\Http\Controllers\ViewController@server_stats')->name('stats.server');
-Route::get('/awards', 'App\Http\Controllers\ViewController@server_awards')->name('stats.awards');
+if(!env('STATS_API_ONLY'))
+{
+    Route::get('/', 'App\Http\Controllers\ViewController@playersonline')->name('stats.online');
+    Route::get('/playerlist', 'App\Http\Controllers\ViewController@ranking')->name('stats.ranking');
+    Route::get('/player', 'App\Http\Controllers\ViewController@player_stats')->name('stats.individual');
+    Route::get('/server', 'App\Http\Controllers\ViewController@server_stats')->name('stats.server');
+    Route::get('/awards', 'App\Http\Controllers\ViewController@server_awards')->name('stats.awards');
+}
